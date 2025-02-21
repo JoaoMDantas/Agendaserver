@@ -1,5 +1,6 @@
 import { HomeModel } from "../model/HomeModel.js";
 
+
 // HomeModel.create({
 //     titulo:'Jesus me ama.',
 //     descricao:'Ele me salvou.'
@@ -15,7 +16,10 @@ export function paginaInicial(req,res)
     return; 
 }
 export function tratamento(req,res){
-    req.session.user= {nome: req.body.cliente, on:true}
+    req.session.user= {
+        nome: req.body.cliente, on:true ,
+        senha: req.body.senha, on:true,
+    }
     console.log(req.session.user);
     res.send(req.body);
     return;
