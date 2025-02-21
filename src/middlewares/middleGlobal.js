@@ -1,17 +1,30 @@
 
-export function security(req, res, next)
-{
-    res.locals.dadosGlobal=['acessivel a todas as rotas'];
-    console.log('passei no middle global');
-    next();
-}
+
 export function checkCsrfError(err, req, res, next)
 {
+    
 
     if(err && err.code=== 'EBADCSRFTOKEN'){
+        console.log(err+"error no csrf");
         return res.render('404')
     }
 }
+export function checkError(err, req, res, next)
+{
+    
+
+    if(err ){
+        console.log(err+"error geral");
+        return res.render('404')
+    }
+}
+
+
+export function csrfToken(req, res, next) 
+{
+    res.locals.csrfToken = req.csrfToken();
+    next();
+};
 
 
 export function logger(req, res, next)

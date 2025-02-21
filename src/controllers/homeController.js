@@ -10,9 +10,7 @@ import { HomeModel } from "../model/HomeModel.js";
 
 export function paginaInicial(req,res)
 {
-    res.render('index', {
-        titulo: 'Este é o titulo',
-        numeros: [0,1,2,3,4]
+    res.render('initialpage', {   
     });
     return; 
 }

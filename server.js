@@ -8,10 +8,23 @@ import helmet from 'helmet';
 import csrf from 'csurf';
 import {route} from './src/routers/router.js';
 import path from 'path';
-import { security, logger } from './src/middlewares/middleGlobal.js';
+import { logger, csrfToken, checkError } from './src/middlewares/middleGlobal.js';
 configDotenv();
 const app=express();
 app.use(helmet());
+app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
+          styleSrc: ["'self'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com"],
+          fontSrc: ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+          imgSrc: ["'self'", "data:"], 
+        },
+      },
+    })
+  );
 mongoose.connect(process.env.CONNECTSTRING)
 .then(()=>{
     console.log('conectei a base');
@@ -46,13 +59,9 @@ app.set('views',path.resolve('./', 'src', 'views'));
 
 app.set('view engine', 'ejs');
 app.use(csrf());
-// app.use(checkCsrfError)
-app.use(security);
 app.use(logger);
-app.use((req, res, next) => {
-    res.locals.csrfToken = req.csrfToken();
-    next();
-  });
+app.use(csrfToken);
+app.use(checkError)
 app.use(route);
 
 app.on('pronto', ()=>{
